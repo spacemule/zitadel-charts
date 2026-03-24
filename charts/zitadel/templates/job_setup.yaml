@@ -71,7 +71,8 @@ spec:
             {{- if $useEnvKey }}
             - --masterkeyFromEnv
             {{- else }}
-            - --masterkeyFile {{ .Values.zitadel.masterkeyFilePath }}
+            - --masterkeyFile
+            - {{ .Values.zitadel.masterkeyFilePath }}
             {{- end }}
             - --config
             - /config/zitadel-config-yaml
