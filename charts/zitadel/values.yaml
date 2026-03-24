@@ -162,13 +162,20 @@ zitadel:
   # characters, as the key length is measured in bytes, not characters.
   # Generate with: tr -dc A-Za-z0-9 </dev/urandom | head -c 32
   # IMPORTANT: Store this value securely. Loss of the masterkey means loss of
-  # all encrypted data. Either set this value or use masterkeySecretName.
+  # all encrypted data. Either set this value, masterkeySecretName, or masterkeyFilePath.
   masterkey: ""
   # -- Name of an existing Kubernetes Secret containing the masterkey at key
   # "masterkey". Use this for production deployments to avoid storing the
   # masterkey in values files. The secret must exist before chart installation.
-  # Note: Either zitadel.masterkey or zitadel.masterkeySecretName must be set.
+  # Note: One of zitadel.masterkey, zitadel.masterkeySecretName, or zitadel.masterkeyFilePath
+  # must be set.
   masterkeySecretName: ""
+  # -- Path at which the masterkey file is mounted into the container. This allows
+  # the use of the secrets-storage-csi driver or similar solutions to manage the secret.
+  # This option requires configuring extraVolumes and extraVolumeMounts.
+  # Note: One of zitadel.masterkey, zitadel.masterkeySecretName, or zitadel.masterkeyFilePath
+  # must be set.
+  masterkeyFilePath: ""
 
   # -- Number of old ReplicaSets to retain for rollback purposes
   # Set to 0 to not keep any old ReplicaSets

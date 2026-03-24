@@ -9,6 +9,7 @@
 {{- $hasMachine := (((((.Values.zitadel).configmapConfig).FirstInstance).Org).Machine) -}}
 {{- $hasMachinePat := ((((((.Values.zitadel).configmapConfig).FirstInstance).Org).Machine).Pat) -}}
 {{- $skipFirstInstance := .Values.zitadel.configmapConfig.FirstInstance.Skip -}}
+{{- $useEnvKey := or .Values.zitadel.masterkey .Values.zitadel.masterkeySecretName -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -67,7 +68,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - setup
+            {{- if $useEnvKey }}
             - --masterkeyFromEnv
+            {{- else }}
+            - --masterkeyFile {{ .Values.zitadel.masterkeyFilePath }}
+            {{- end }}
             - --config
             - /config/zitadel-config-yaml
             - --steps
@@ -93,11 +98,13 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: status.podIP
+            {{- if $useEnvKey }}
             - name: ZITADEL_MASTERKEY
               valueFrom:
                 secretKeyRef:
                   name: {{ include "zitadel.masterkeySecretName" . }}
                   key: masterkey
+            {{- end }}
             - name: ZITADEL_FIRSTINSTANCE_MACHINEKEYPATH
               value: "/machinekey/sa.json"
             {{- if and (not $skipFirstInstance) $hasMachinePat }}

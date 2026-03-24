@@ -1,3 +1,4 @@
+{{- $useEnvKey := or .Values.zitadel.masterkey .Values.zitadel.masterkeySecretName -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -74,18 +75,25 @@ spec:
             - --config
             - /zitadel-secret-config-yaml/{{ .Values.zitadel.configSecretKey }}
             {{- end }}
+            {{- if $useEnvKey }}
             - --masterkeyFromEnv
+            {{- else }}
+            - --masterkeyFile {{ .Values.zitadel.masterkeyFilePath }}
+            {{- end }}
           env:
             - name: POD_IP
               valueFrom:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: status.podIP
+            {{- if $useEnvKey }}
             - name: ZITADEL_MASTERKEY
               valueFrom:
                 secretKeyRef:
                   name: {{ include "zitadel.masterkeySecretName" . }}
                   key: masterkey
+            {{- end }}
+            {{- $dbEnv := get (include "zitadel.dbkey.json" . | fromJson) "env" }}
             {{- if (or .Values.zitadel.dbSslCaCrt .Values.zitadel.dbSslCaCrtSecret) }}
             - name: ZITADEL_DATABASE_POSTGRES_USER_SSL_ROOTCERT
               value: /db-ssl-ca-crt/ca.crt
