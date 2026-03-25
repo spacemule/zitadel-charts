@@ -75,9 +75,9 @@ spec:
             - --config
             - /zitadel-secret-config-yaml/{{ .Values.zitadel.configSecretKey }}
             {{- end }}
-            {{- if .Values.zitadel.configFilePath }}
+            {{- range .Values.zitadel.configFilePaths }}
             - --config
-            - {{ .Values.zitadel.configFilePath }}
+            - {{ . }}
             {{- end }}
             {{- if $useEnvKey }}
             - --masterkeyFromEnv

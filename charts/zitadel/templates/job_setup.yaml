@@ -90,11 +90,11 @@ spec:
             - --steps
             - /zitadel-secret-config-yaml/{{ .Values.zitadel.configSecretKey }}
             {{- end }}
-            {{- if .Values.zitadel.configFilePath }}
+            {{- range .Values.zitadel.configFilePaths }}
             - --config
-            - {{ .Values.zitadel.configFilePath }}
+            - {{ . }}
             - --steps
-            - {{ .Values.zitadel.configFilePath }}
+            - {{ . }}
             {{- end }}
             {{- if .Values.setupJob.additionalArgs }}
             {{- toYaml .Values.setupJob.additionalArgs | nindent 12 }}

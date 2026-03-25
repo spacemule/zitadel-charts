@@ -1579,12 +1579,9 @@
                         }
                     }
                 },
-                "configFilePath": {
-                    "description": "Path to a file mounted into the container via an extraVolumeMount. Use this to merge sensitive ZITADEL configuration values from sources such as the secrets-storage-csi driver without exposing the values to etcd and other processes.",
-                    "type": [
-                        "null",
-                        "string"
-                    ]
+                "configFilePaths": {
+                    "description": "Paths to files mounted into the container via an extraVolumeMount. Use this to merge sensitive ZITADEL configuration values from sources such as the secrets-storage-csi driver without exposing the values to etcd and other processes.",
+                    "type": "array"
                 },
                 "configSecretKey": {
                     "description": "The key within the configSecretName secret that contains the ZITADEL configuration YAML. The default \"config-yaml\" matches the expected format.",
