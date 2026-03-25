@@ -159,7 +159,7 @@ zitadel:
   # Use this to merge sensitive ZITADEL configuration values from sources
   # such as the secrets-storage-csi driver without exposing the values to
   # etcd and other processes.
-  configFilePaths: []
+  configFilePaths: [] # @schema item: string
 
   # -- ZITADEL's masterkey for symmetric encryption of sensitive data like
   # private keys and tokens. Must be exactly 32 bytes. Using printable ASCII
